@@ -5,6 +5,11 @@ import {
   SubmittedDocument,
 } from '@/types';
 
+let _idCounter = 1000;
+function nextId(): string {
+  return String(++_idCounter);
+}
+
 const STATUS_TRANSITIONS: Record<CaseStatus, CaseStatus | null> = {
   Draft: 'IntakeValidated',
   IntakeValidated: 'WaitingForEvidence',
@@ -645,19 +650,19 @@ export function createCase(data: {
     beneficialOwners: [],
     documentRequirements: [
       {
-        requirementId: `REQ-${Date.now()}-1`,
+        requirementId: `REQ-${nextId()}`,
         docType: 'Certificate of Incorporation',
         mandatory: true,
         status: 'Pending',
       },
       {
-        requirementId: `REQ-${Date.now()}-2`,
+        requirementId: `REQ-${nextId()}`,
         docType: 'Articles of Association',
         mandatory: true,
         status: 'Pending',
       },
       {
-        requirementId: `REQ-${Date.now()}-3`,
+        requirementId: `REQ-${nextId()}`,
         docType: 'Proof of Address',
         mandatory: true,
         status: 'Pending',
@@ -667,7 +672,7 @@ export function createCase(data: {
     screeningHits: [],
     events: [
       {
-        eventId: `EVT-${Date.now()}`,
+        eventId: `EVT-${nextId()}`,
         eventType: 'CaseCreated',
         timestamp: now,
         actor: 'system',
@@ -696,7 +701,7 @@ export function advanceCase(id: string): OnboardingCase | undefined {
   if (!next) return c;
   const now = new Date().toISOString();
   const event: CaseEvent = {
-    eventId: `EVT-${Date.now()}`,
+    eventId: `EVT-${nextId()}`,
     eventType: 'StatusChanged',
     timestamp: now,
     actor: c.assignedTo,
@@ -713,7 +718,7 @@ export function addEvent(id: string, event: Omit<CaseEvent, 'eventId'>): Onboard
   if (!c) return undefined;
   const newEvent: CaseEvent = {
     ...event,
-    eventId: `EVT-${Date.now()}`,
+    eventId: `EVT-${nextId()}`,
   };
   return updateCase(id, { events: [...c.events, newEvent] });
 }
@@ -726,13 +731,13 @@ export function addDocument(
   if (!c) return undefined;
   const newDoc: SubmittedDocument = {
     ...doc,
-    documentId: `DOC-${Date.now()}`,
+    documentId: `DOC-${nextId()}`,
   };
   const updatedRequirements = c.documentRequirements.map((req) =>
     req.docType === doc.docType ? { ...req, status: 'Received' as const } : req
   );
   const event: CaseEvent = {
-    eventId: `EVT-${Date.now()}-doc`,
+    eventId: `EVT-${nextId()}`,
     eventType: 'DocumentReceived',
     timestamp: new Date().toISOString(),
     actor: 'client-portal',
