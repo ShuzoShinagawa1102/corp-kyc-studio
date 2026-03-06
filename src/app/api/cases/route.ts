@@ -11,6 +11,11 @@ export async function POST(request: Request) {
   if (!legalEntity || !productType || !riskTier || !assignedTo) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
-  const newCase = createCase({ legalEntity, productType, riskTier, assignedTo });
+  // Generate entityId server-side to avoid client-side randomness
+  const entityWithId = {
+    ...legalEntity,
+    entityId: `LE-${crypto.randomUUID()}`,
+  };
+  const newCase = createCase({ legalEntity: entityWithId, productType, riskTier, assignedTo });
   return NextResponse.json(newCase, { status: 201 });
 }

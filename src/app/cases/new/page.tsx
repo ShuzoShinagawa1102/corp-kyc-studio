@@ -45,7 +45,6 @@ export default function NewCasePage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           legalEntity: {
-            entityId: `LE-${form.registrationNumber.replace(/\s+/g, '-')}-${Math.random().toString(36).slice(2, 7)}`,
             registeredName: form.companyName,
             registrationNumber: form.registrationNumber,
             jurisdiction: form.jurisdiction,

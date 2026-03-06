@@ -6,8 +6,12 @@ import {
 } from '@/types';
 
 let _idCounter = 1000;
+let _caseCounter = 5; // starts after seed data (KYC-001 through KYC-005)
 function nextId(): string {
   return String(++_idCounter);
+}
+function nextCaseId(): string {
+  return `KYC-${String(++_caseCounter).padStart(3, '0')}`;
 }
 
 const STATUS_TRANSITIONS: Record<CaseStatus, CaseStatus | null> = {
@@ -636,7 +640,7 @@ export function createCase(data: {
   riskTier: OnboardingCase['riskTier'];
   assignedTo: string;
 }): OnboardingCase {
-  const caseId = `KYC-${String(cases.length + 1).padStart(3, '0')}`;
+  const caseId = nextCaseId();
   const now = new Date().toISOString();
   const newCase: OnboardingCase = {
     caseId,
