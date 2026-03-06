@@ -15,7 +15,7 @@ export default function DecisionPanel({ caseData }: { caseData: OnboardingCase }
   const router = useRouter();
   const [decision, setDecision] = useState<'Approved' | 'Rejected' | 'Exception'>('Approved');
   const [rationale, setRationale] = useState('');
-  const [decidedBy, setDecidedBy] = useState('');
+  const [decidedBy, setDecidedBy] = useState(caseData.assignedTo);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
